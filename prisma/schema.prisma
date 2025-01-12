@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // можно поменять на SQLite/MySQL
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  username  String     @unique
+  email     String     @unique
+  password  String
+  createdAt DateTime   @default(now())
+  planets   Planet[]
+  fleets    Fleet[]
+  Research  Research[]
+  Event     Event[]
+}
+
+model Planet {
+  id        Int        @id @default(autoincrement())
+  name      String
+  userId    Int        @map("user_id")
+  user      User       @relation(fields: [userId], references: [id])
+  resources Resource?
+  buildings Building[]
+  fleets    Fleet[]
+  Event     Event[]
+}
+
+model Resource {
+  id        Int    @id @default(autoincrement())
+  planetId  Int    @unique
+  planet    Planet @relation(fields: [planetId], references: [id])
+  metal     Int    @default(0)
+  crystal   Int    @default(0)
+  deuterium Int    @default(0)
+}
+
+model Building {
+  id       Int    @id @default(autoincrement())
+  name     String
+  level    Int    @default(1)
+  planetId Int
+  planet   Planet @relation(fields: [planetId], references: [id])
+}
+
+model Fleet {
+  id       Int    @id @default(autoincrement())
+  name     String
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id])
+  planetId Int
+  planet   Planet @relation(fields: [planetId], references: [id])
+  ships    Ship[]
+}
+
+model Ship {
+  id      Int    @id @default(autoincrement())
+  type    String
+  count   Int    @default(0)
+  fleetId Int
+  fleet   Fleet  @relation(fields: [fleetId], references: [id])
+}
+
+model Research {
+  id     Int    @id @default(autoincrement())
+  name   String
+  level  Int    @default(1)
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Event {
+  id        Int      @id @default(autoincrement())
+  type      String // "attack", "defense", "colonization"
+  createdAt DateTime @default(now())
+  details   String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  planetId  Int
+  planet    Planet   @relation(fields: [planetId], references: [id])
+}
