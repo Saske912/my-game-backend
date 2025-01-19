@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Resource" ADD COLUMN     "crystalProduction" INTEGER NOT NULL DEFAULT 20,
+ADD COLUMN     "deuteriumProduction" INTEGER NOT NULL DEFAULT 10,
+ADD COLUMN     "metalProduction" INTEGER NOT NULL DEFAULT 30;
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "lastUpdated" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

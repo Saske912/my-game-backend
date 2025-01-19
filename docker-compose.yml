@@ -11,6 +11,40 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  nextjs:
+    build:
+      context: ./nextjs
+      dockerfile: Dockerfile
+    volumes:
+      - ./nextjs:/app
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://johndoe:randompassword@db:5432/mydb
+    depends_on:
+      - db
 
+  nestjs:
+    build:
+      context: ./nestjs
+      dockerfile: Dockerfile
+    volumes:
+      - ./nestjs:/app
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgres://johndoe:randompassword@db:5432/mydb
+    depends_on:
+      - db
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - nextjs
+      - nestjs
+    
 volumes:
   postgres_data:

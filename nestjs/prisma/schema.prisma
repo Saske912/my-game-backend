@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["debian-openssl-3.0.x", "native"]
 }
 
 datasource db {
@@ -20,23 +21,27 @@ model User {
 }
 
 model Planet {
-  id        Int        @id @default(autoincrement())
-  name      String
-  userId    Int        @map("user_id")
-  user      User       @relation(fields: [userId], references: [id])
-  resources Resource?
-  buildings Building[]
-  fleets    Fleet[]
-  Event     Event[]
+  id          Int        @id @default(autoincrement())
+  name        String
+  userId      Int        @map("user_id")
+  user        User       @relation(fields: [userId], references: [id])
+  resources   Resource?
+  buildings   Building[]
+  fleets      Fleet[]
+  Event       Event[]
+  lastUpdated DateTime   @default(now())
 }
 
 model Resource {
-  id        Int    @id @default(autoincrement())
-  planetId  Int    @unique
-  planet    Planet @relation(fields: [planetId], references: [id])
-  metal     Int    @default(0)
-  crystal   Int    @default(0)
-  deuterium Int    @default(0)
+  id                  Int    @id @default(autoincrement())
+  planetId            Int    @unique
+  planet              Planet @relation(fields: [planetId], references: [id])
+  metal               Int    @default(0)
+  crystal             Int    @default(0)
+  deuterium           Int    @default(0)
+  metalProduction     Int    @default(30)
+  crystalProduction   Int    @default(20)
+  deuteriumProduction Int    @default(10)
 }
 
 model Building {

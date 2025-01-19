@@ -1,14 +1,14 @@
 // src/planet/planet.controller.ts
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PlanetService } from './planet.service';
 
 @Controller('planets')
 export class PlanetController {
 	constructor(private readonly planetService: PlanetService) { }
 
-	@Get()
-	getPlanets() {
-		return this.planetService.getPlanets();
+	@Get(":userId")
+	getPlanets(@Param("userId") userId: number) {
+		return this.planetService.getPlanets(userId);
 	}
 
 	@Post('create')
